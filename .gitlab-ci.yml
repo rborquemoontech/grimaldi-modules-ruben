@@ -1,0 +1,15 @@
+build_image:
+  except:
+    refs:
+      - main
+  script:
+    - docker build --build-arg BRANCH=$CI_COMMIT_BRANCH --build-arg NPM_TOKEN=$MOONTECH_NPM_INSTALL_TOKEN -t registry.moon.tech.nom.es/grimaldi-ruben:$CI_COMMIT_BRANCH .
+ 
+deploy_preview:
+  only:
+    refs:
+      - main
+  script:
+    - docker build --build-arg BRANCH=$CI_COMMIT_BRANCH --build-arg NPM_TOKEN=$MOONTECH_NPM_INSTALL_TOKEN -t registry.moon.tech.nom.es/grimaldi-ruben:$CI_COMMIT_BRANCH .
+    - docker login registry.moon.tech.nom.es -u gitlab -p $MOONTECH_REGISTRY_PASSWORD
+    - docker push registry.moon.tech.nom.es/grimaldi-ruben:$CI_COMMIT_BRANCH
